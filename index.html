@@ -1,0 +1,76 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>SlideToggle plugin</title>
+        <meta name="Description" content="">
+        <link rel="stylesheet" type="text/css" href="styles/reset.css" />
+        <link rel="stylesheet" type="text/css" href="styles/main.css" />
+    </head>
+    
+    <body>
+        <div class="container">
+            <header>
+                <h1>Slide Toggle widget</h1>
+            </header>
+            <section>
+                <div class='test'>
+                    <div class="description">
+                        <b>Demo 1</b> - demonstrates the following:
+                        <ul>
+                            <li>callbacks - using callbacks to add and remove a css class on button</li>
+                            <li>clickOutside - the overlay closes by clicking anywhere on the body outside of the overlay.</li>
+                            <li>data-clickel attribute - if you inspect the overlay, you will notice 
+                                that the button is associated with the widget using the attribute</li>
+                            <li>pushes the content down</li>
+                        </ul>
+                    </div>
+                    <div class="button" id="button1">Click Me</div>
+                    <div class="clear"></div>
+                    <div class="overlay" id="slideToggle1" data-clickel="button1" style="display:none;">
+                        <div class="overlay-content">
+                            <p>Lorem Ipsum. Proin gravida nibh vel velit auctor aliquet. Aenean sollicitudin,
+                                lorem quis bibendum auctor, nisi elit consequat ipsum, nec sagittis sem
+                                nibh id elit. Duis sed odio sit amet nibh vulputate cursus a sit amet mauris.</p>
+                            <p>Morbi accumsan ipsum velit. Nam nec tellus a odio tincidunt auctor a ornare
+                                odio. Sed non mauris vitae erat consequat auctor eu in elit. Sem nibh id
+                                elit.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class='test'>
+                    <div class="description">
+                        <b>Demo 2</b> - demonstrates the following:
+                        <ul>
+                            <li>jsOnly - animates using javascript even when the browser supports transitions</li>
+                            <li>clickEl - element id is passed in the options</li>
+                            <li>speed - animation speed passed in the options</li>
+                            <li>the widget is absolutely positions over the content</li>
+                        </ul>
+                    <div
+                    class="button" id="button2">Click Me</div>
+                <div class="clear"></div>
+                <div class="overlay" id="slideToggle2" style="display:none;position:absolute">
+                    <div class="overlay-content">
+                        <p>Lorem Ipsum. Proin gravida nibh vel velit auctor aliquet. Aenean sollicitudin,
+                            lorem quis bibendum auctor, nisi elit consequat ipsum, nec sagittis sem
+                            nibh id elit. Duis sed odio sit amet nibh vulputate cursus a sit amet mauris.</p>
+                        <p>Morbi accumsan ipsum velit. Nam nec tellus a odio tincidunt auctor a ornare
+                            odio. Sed non mauris vitae erat consequat auctor eu in elit. Sem nibh id
+                            elit.</p>
+                    </div>
+                </div>
+                <div class="other-content">
+                <p>Lorem Ipsum. Proin gravida nibh vel velit auctor aliquet. Aenean sollicitudin,
+                    lorem quis bibendum auctor, nisi elit consequat ipsum, nec sagittis sem
+                    nibh id elit. Duis sed odio sit amet nibh vulputate cursus a sit amet mauris.</p>
+                <p>Morbi accumsan ipsum velit. Nam nec tellus a odio tincidunt auctor a ornare
+                    odio. Sed non mauris vitae erat consequat auctor eu in elit. Sem nibh id
+                    elit.</p></div>
+        </div>
+        </section>
+        </div>
+        <script src="dist/bundle.js"></script>
+    </body>
+
+</html>
