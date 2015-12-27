@@ -23,65 +23,80 @@ export default class SlideToggle {
             interval=13,            // js animation interval
             beforeAnimate,          // callback before animation finishes
             afterAnimate,           // callback after animation finished
-            clickEl                 // element to listen for click, eg. button
+            clickElId               // element to listen for click, eg. button
         }){
 
-        if(!id) { 
-            throw "Element id parameter missing to create SlideToggle object"; 
-        }        
-        
-        this.el = document.getElementById(id);
-
-        if(this.el === undefined) {
-            throw "Dom Element not found with the passed id"; 
+        if (!id) {
+            throw "Element id parameter missing to create SlideToggle object";
         }
 
-        this.clickOutside=clickOutside;
+        this.el = document.getElementById(id);
+
+        if (this.el === undefined) {
+            throw "Dom Element not found with the passed id";
+        }
+
+        this.clickOutside = clickOutside;
         this.jsOnly = jsOnly;
         this.speed = speed;
         this.interval = interval;
         this.beforeAnimate = beforeAnimate;
         this.afterAnimate = afterAnimate;
         this.isAnimating = false;
-        if(clickEl === undefined) {
-            clickEl = this.el.dataset.clickel;
+        if (clickElId === undefined) {
+            clickElId = this.el.dataset.clickelid;
         }
-        this.clickEl = clickEl;
-        this.initEvents();
+        this.clickElId = clickElId;
+        this.wasOpen = false;
 
+        this.initClickHandlers();
+        this.initTransitions();
     }
 
-    initEvents() {
-        if(this.clickEl !== undefined) {
-            Utils.log("Adding click handler on " + this.clickEl);
-            documentClickEvents.push((e) => {           // pushing handler to 
-                if(e.target.id === this.clickEl) {      // shared event listener
+    initClickHandlers() {
+        if (this.clickElId !== undefined) {
+            Utils.log("Adding click handler on " + this.clickElId);
+            // pushing handler to the shared event listener
+            documentClickEvents.push((e) => { 
+                if (e.target.id === this.clickElId) {
                     this.slideToggle();
-                }else if(!this.el.contains(e.target) && this.clickOutside && this.visible()){
+                } else if (!this.el.contains(e.target) && this.clickOutside && this.wasOpen) {
                     this.slideToggle();
                 }
             }.bind(this));
         }
+    }
 
+    initTransitions() {
+
+        // if browser supports trnsitions and user did not pass js only option
+        // then initiate transition stuff
         if (Utils.isTransitions && !this.jsOnly) {
             // css transitions doesn't work without an initial height, hence setting the height
             this.el.style.height = this.el.clientHeight + 'px';
-            this.slideToggleFunction = this.slideCSS;
             Utils.onTransitionEnd(this.el, this.onTransitionEnd.bind(this));
-        }else {
+
+            //add reference to the function call
+            this.slideToggleFunction = this.slideCSS;
+        } else {
             this.slideToggleFunction = this.slideJS;
-        }        
+        }
+
     }
 
     slideToggle() {
 
-        if(this.isAnimating){
+        if (this.isAnimating) {
             Utils.log("Still Animating, click event ignored");
             return;
         }
+
+        // browsers do not provide transitionStart even as yet 
+        // so we call this everytime
         this.onTransitionStart();
+
         this.slideToggleFunction();
-    
+
     }
 
     /**
@@ -94,7 +109,7 @@ export default class SlideToggle {
 
         let initialHeight = "0";
 
-        if (!this.visible()) {
+        if (!this.wasOpen) {
             this.visible('block');
             initialHeight = Utils.findAutoHeight(this.el) + "px";
         }
@@ -110,12 +125,12 @@ export default class SlideToggle {
      * using a setInterval() and clearInterval()
      */
     slideJS() {
-        
+
         let elHeight = this.el.clientHeight,
             animHeight = elHeight,
             step = 1;
 
-        if (!this.visible()) {
+        if (!this.wasOpen) {
             elHeight = Utils.findAutoHeight(this.el);
             animHeight = 0;
             step = -1;
@@ -129,7 +144,7 @@ export default class SlideToggle {
 
         // to increase/decrease the height of element            
         // the value of d could be dynamic for non-linear animations
-        let timer = setInterval(() => { 
+        let timer = setInterval(() => {
 
             if (animHeight >= step && animHeight <= elHeight) {
                 animHeight = animHeight - step;
@@ -138,6 +153,7 @@ export default class SlideToggle {
                 clearInterval(timer);
                 this.onTransitionEnd();
             }
+
         }, this.interval);
 
     }
@@ -145,7 +161,7 @@ export default class SlideToggle {
     onTransitionStart() {
         Utils.log("Setting isAnimating to true");
         this.isAnimating = true;
-        if(this.beforeAnimate) {
+        if (this.beforeAnimate) {
             this.beforeAnimate();
         }
     }
@@ -153,13 +169,14 @@ export default class SlideToggle {
     onTransitionEnd() {
         Utils.log("setting isAnimating to false");
         this.isAnimating = false;
-        if(!this.visible()){ 
+        if (this.wasOpen) {
             this.visible('none');
         }
-        if(this.afterAnimate) {
+        if (this.afterAnimate) {
             Utils.log("calling user afterAnimate function");
             this.afterAnimate();
         }
+        this.wasOpen = !this.wasOpen;
     }
 
     // set/get visibility of the element
@@ -167,7 +184,7 @@ export default class SlideToggle {
         if (visibility) {
             this.el.style.display = visibility;
         } else {
-            return (this.el.clientHeight !== 0);
+            throw "Parameter undefined";
         }
     }
 }

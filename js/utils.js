@@ -2,7 +2,7 @@ let Utils = {};
 
 let debug = location.href.indexOf("debug=true") > -1;
 Utils.log = function(log) {
-    if(debug) {
+    if (debug) {
         console.log(log);
     }
 }
@@ -16,24 +16,24 @@ Utils.isTransitions = function() {
 
     let isTransition = false,
         style = document.createElement("div").style,
-        vendors = { 
-            'transition':'transitionend',
-            'webkitTransition':'webkitTransitionEnd',
-            'MozTransition':'transitionend',
-            'OTransition':'oTransitionEnd',
-            'MsTransition' : 'MSTransitionEnd'
+        vendors = {
+            'transition': 'transitionend',
+            'webkitTransition': 'webkitTransitionEnd',
+            'MozTransition': 'transitionend',
+            'OTransition': 'oTransitionEnd',
+            'MsTransition': 'MSTransitionEnd'
         };
 
     Object.keys(vendors).some((prefix) => {
-        if(prefix in style){
+        if (prefix in style) {
             Utils.log("browser supports transitions");
             Utils.vprefix = prefix;
-            Utils.log("browser transitions prefix: "+ prefix);
+            Utils.log("browser transitions prefix: " + prefix);
             Utils.transitionEnd = vendors[prefix];
-            Utils.log("browser transition end callback name: "+ vendors[prefix]);
+            Utils.log("browser transition end callback name: " + vendors[prefix]);
             isTransition = true;
             return true;
-        } else { 
+        } else {
             Utils.log("browser does not support transitions");
             isTransition = false;
             return false;
@@ -43,20 +43,22 @@ Utils.isTransitions = function() {
     return isTransition;
 }();
 
-Utils.onTransitionEnd = function(el,listener) {
-    el.addEventListener(Utils.transitionEnd, listener);    
+Utils.onTransitionEnd = function(el, listener) {
+    el.addEventListener(Utils.transitionEnd, listener);
 }
 
 /**
  * Function to find the auto height of the element when showing the element.
  * It displays the element out of the view and gets its height.
  */
-Utils.findAutoHeight= function(el) {
+Utils.findAutoHeight = function(el) {
     let oldCssText = el.style.cssText,
         w = el.parentNode.clientWidth;
-    el.style.cssText = oldCssText + 
-                'display:block;position:absolute;top:-999px;height:auto;width:' + w + 'px';
+        
+    el.style.cssText = oldCssText +
+        'display:block;position:absolute;top:-999px;height:auto;width:' + w + 'px';
     let h = el.clientHeight;
+
     el.style.cssText = oldCssText;
     return h;
 }
